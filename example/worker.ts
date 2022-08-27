@@ -1,7 +1,7 @@
 import { registerActions } from '../src'
 export const actions = {
     sum(payload: { a: number; b: number }) {
-        return new Promise(res => {
+        return new Promise<number>(res => {
             const p = Date.now()
             setTimeout(() => {
                 console.log(`resolved after ${Date.now() - p}`)

@@ -8,16 +8,16 @@ type MainMessages = {
     type: keyof ActionsHandlingMap,
     params: Parameters<ActionsHandlingMap[MainMessages['type']]>[0]
 }
-export function createWorker(scriptPath: string | URL, options?: WorkerOptions) {
+export function createWorker<TActions extends ActionsHandlingMap>(scriptPath: string | URL, options?: WorkerOptions) {
     let worker: Worker | null
     worker = new Worker(scriptPath, options)
 
-    function exec<TActionType extends keyof ActionsHandlingMap>(
+    function exec<TActionType extends keyof TActions>(
         type: TActionType,
-        params: Parameters<ActionsHandlingMap[TActionType]>[0]
+        params: Parameters<TActions[TActionType]>[0]
     ) {
 
-        const promise = new Promise<ReturnType<ActionsHandlingMap[TActionType]>>((resolve, reject) => {
+        const promise = new Promise<Awaited<ReturnType<TActions[TActionType]>>>((resolve, reject) => {
             if (worker instanceof Worker) {
 
                 const message = { type, params }
