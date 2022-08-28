@@ -2,10 +2,13 @@ import { expect, test } from "@playwright/test"
 
 test("worker", async ({ page }) => {
   await page.goto("http://localhost:3001")
-  await page.waitForSelector("#worker-result")
+  for (let i = 0; i < 10; i++) {
+    const eleId = `#worker-result-${i}`
+    await page.waitForSelector(eleId)
 
-  const workerResult = await page.$("#worker-result")
+    const workerResult = await page.$(eleId)
 
-  expect(await workerResult?.textContent()).toBe("11")
+    expect(await workerResult?.textContent()).toBe(String(i * 2 + 2))
+  }
 
 })
